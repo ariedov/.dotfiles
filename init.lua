@@ -34,6 +34,14 @@ vim.opt.hidden = true
 vim.opt.mouse = "a"
 vim.opt.clipboard = "unnamedplus"
 
+vim.api.nvim_create_autocmd('TextYankPost', {
+  desc = 'Highlight when yanking (copying) text',
+  group = vim.api.nvim_create_augroup('highlight-yank', { clear = true }),
+  callback = function()
+    vim.highlight.on_yank()
+  end,
+})
+
 vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
@@ -45,6 +53,15 @@ vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower win
 vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
 
 require("lazy").setup({
+  {
+    "folke/tokyonight.nvim",
+    lazy = false,
+    priority = 1000,
+    opts = {},
+    init = function()
+      vim.cmd.colorscheme 'tokyonight-night'
+    end
+  },
   {
     "nvim-telescope/telescope.nvim",
     branch = "0.1.x",
@@ -86,11 +103,12 @@ require("lazy").setup({
     end,
   },
   {
-	  "nvim-treesitter/nvim-treesitter",
-	  config = function() require("nvim-treesitter.configs").setup {
-		  ensure_installed = { "bash", "css", "html", "javascript", "lua", "regex", "python" }
-	  } end },
+    "nvim-treesitter/nvim-treesitter",
+    config = function() require("nvim-treesitter.configs").setup {
+      ensure_installed = { "bash", "css", "html", "javascript", "lua", "regex", "python" }
+    } end },
   { "tpope/vim-fugitive" },
+  { "tpope/vim-sleuth" }, -- Detect tabstop and shiftwidth automatically
   {
     'stevearc/oil.nvim',
     ---@module 'oil'
@@ -101,7 +119,7 @@ require("lazy").setup({
     -- dependencies = { "nvim-tree/nvim-web-devicons" }, -- use if you prefer nvim-web-devicons
     -- Lazy loading is not recommended because it is very tricky to make it work correctly in all situations.
     lazy = false,
-    config = function() 
+    config = function()
       require("oil").setup({
         view_options = {
           show_hidden = true
@@ -110,12 +128,36 @@ require("lazy").setup({
     end
   },
   {
-    "folke/tokyonight.nvim",
-    lazy = false,
-    priority = 1000,
-    opts = {},
-    init = function()
-      vim.cmd.colorscheme 'tokyonight-night'
+    'neovim/nvim-lspconfig',
+    dependencies = {
+      'williamboman/mason.nvim',
+      'williamboman/mason-lspconfig.nvim',
+      'hrsh7th/nvim-cmp',
+    },
+    config = function()
+      require 'lspconfig'
+      require 'mason'
+      require 'mason-lspconfig'
+
+      require('mason').setup()
+      require('mason-lspconfig').setup({
+        -- installing nothing for mobile use case
+        -- ensure_installed = { "lua_ls", "pyright" },
+      })
+
+      require('mason-lspconfig').setup_handlers {
+        function(server_name)
+          require('lspconfig')[server_name].setup {
+            settings = {
+              Lua = {
+                diagnostics = {
+                  globals = { 'vim' },
+                },
+              },
+            },
+          }
+        end,
+      }
     end
   },
 })
