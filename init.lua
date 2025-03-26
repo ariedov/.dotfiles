@@ -96,10 +96,17 @@ require("lazy").setup({
       }
 
       local builtin = require("telescope.builtin")
-      vim.keymap.set("n", "<space>sf", builtin.find_files, { desc = "[F]ind [F]iles" })
-      vim.keymap.set("n", "<space>sg", builtin.live_grep, { desc = "[F]ind [G]rep" })
-      vim.keymap.set("n", "<space>sb", builtin.buffers, { desc = "[F]ind [B]uffers" })
-      vim.keymap.set("n", "<space>sh", builtin.help_tags, { desc = "[F]ind [H]elp" })
+      vim.keymap.set("n", "<leader>sf", builtin.find_files, { desc = "[F]ind [F]iles" })
+      vim.keymap.set("n", "<leader>sg", builtin.live_grep, { desc = "[F]ind [G]rep" })
+      vim.keymap.set("n", "<leader>sb", builtin.buffers, { desc = "[F]ind [B]uffers" })
+      vim.keymap.set("n", "<leader>sh", builtin.help_tags, { desc = "[F]ind [H]elp" })
+      vim.keymap.set('n', '<leader>/', function()
+        -- You can pass additional configuration to Telescope to change the theme, layout, etc.
+        builtin.current_buffer_fuzzy_find(require('telescope.themes').get_dropdown {
+          winblend = 10,
+          previewer = false,
+        })
+      end, { desc = '[/] Fuzzily search in current buffer' })
     end,
   },
   {
