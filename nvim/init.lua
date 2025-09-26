@@ -111,9 +111,15 @@ require("lazy").setup({
   },
   {
     "nvim-treesitter/nvim-treesitter",
-    config = function() require("nvim-treesitter.configs").setup {
-      ensure_installed = { "bash", "css", "html", "javascript", "lua", "regex", "python" }
-    } end },
+    config = function() 
+      require("nvim-treesitter.configs").setup {
+        ensure_installed = { "bash", "css", "html", "javascript", "lua", "regex", "python" },
+        highlight = {
+          enable = true
+        }
+      } 
+    end 
+  },
   { "tpope/vim-fugitive" },
   { "tpope/vim-sleuth" }, -- Detect tabstop and shiftwidth automatically
   {
