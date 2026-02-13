@@ -38,11 +38,11 @@ default=(
 sketchybar --default "${default[@]}"
 
 sketchybar --add event aerospace_workspace_change
+sketchybar --add event aerospace_mode_change
 
 sketchybar --add item aerospace_workspace left \
            --set aerospace_workspace \
                  script="~/.config/sketchybar/plugins/aerospace.sh" \
-                 update_freq=1 \
                  icon="" \
                  icon.drawing=off \
                  icon.color=0xff7aa2f7 \
@@ -50,7 +50,7 @@ sketchybar --add item aerospace_workspace left \
                  label.align=center \
                  label.padding_left=8 \
                  label.padding_right=8 \
-          --subscribe aerospace_workspace aerospace_workspace_change
+          --subscribe aerospace_workspace aerospace_workspace_change aerospace_mode_change
 
 ##### Adding Left Items #####
 # We add some regular items to the left side of the bar, where
@@ -77,7 +77,7 @@ sketchybar --add item front_app left \
 # volume is registered. More info about the event system can be found here:
 # https://felixkratz.github.io/SketchyBar/config/events
 
-sketchybar --add item clock right \
+sketchybar --add item clock e \
            --set clock update_freq=10 icon=  script="$PLUGIN_DIR/clock.sh" \
                  icon.padding_left=8 \
                  label.padding_right=8
@@ -97,10 +97,14 @@ sketchybar --add item volume right \
            --add item language right \
            --set language update_freq=1 icon= script="$PLUGIN_DIR/language.sh" \
                  label.width=25 \
-                 padding_left=8 \
-           --subscribe language system_woke 
+                 padding_left=0 \
+           --subscribe language system_woke \
+           \
+           --add item wifi right \
+           --set wifi update_freq=10 script="$PLUGIN_DIR/wifi.sh" \
+                  padding_left=12
 
-sketchybar --add bracket system volume battery language \
+sketchybar --add bracket system wifi volume battery language \
            --set system background.drawing=on \
                         background.color=0xff080616 \
                         background.corner_radius=8 \
@@ -108,7 +112,7 @@ sketchybar --add bracket system volume battery language \
                         background.padding_left=4 \
                         background.padding_right=4
 
-sketchybar --add item slack e \
+sketchybar --add item slack q \
            --set slack \
                  icon= \
                  icon.padding_left=12 \
@@ -116,22 +120,22 @@ sketchybar --add item slack e \
                  update_freq=10 \
                  script="$PLUGIN_DIR/slack.sh" \
                  click_script="open -a /Applications/Slack.app" \
-           --add item whatsapp e \
-           --set whatsapp \
-                 icon= \
-                 icon.padding_left=12 \
-                 icon.padding_right=0 \
-                 update_freq=10 \
-                 script="$PLUGIN_DIR/whatsapp.sh" \
-                 click_script="open -a /Applications/WhatsApp.localized/WhatsApp.app" \
-           --add item telegram e \
+           --add item telegram q \
            --set telegram \
                  icon= \
                  icon.padding_left=12 \
                  icon.padding_right=0 \
                  update_freq=10 \
                  script="$PLUGIN_DIR/telegram.sh" \
-                 click_script="open -a /Applications/Telegram.app"
+                 click_script="open -a /Applications/Telegram.app" \
+           --add item whatsapp q \
+           --set whatsapp \
+                 icon=󰖣 \
+                 icon.padding_left=12 \
+                 icon.padding_right=0 \
+                 update_freq=10 \
+                 script="$PLUGIN_DIR/whatsapp.sh" \
+                 click_script="open -a /Applications/WhatsApp.localized/WhatsApp.app"
 
 sketchybar --add bracket messengers slack whatsapp telegram \
            --set         messengers \
